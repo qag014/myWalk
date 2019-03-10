@@ -1,0 +1,270 @@
+<!MyWalk Developed by Hasan Malik, Nima Javadvand Tamar and Qammer Gul>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="user-scalable=no, width=device-width" />
+    <link rel="icon" href="snowflake.png">
+    <title>MyWalk</title>
+    <style>
+
+
+      #bottom{
+        font-family: sans-serif;
+      }
+      #map {
+        height:500px;
+        width:1000px;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 2em;
+        margin-top: 3em;
+        margin-bottom: 2em;
+        border: solid 1px black;
+      }
+      #top{
+        background-color: gray;
+        border-radius: 5px;
+        margin-top: 0px;
+      }
+      #header{margin-left: 13em;
+      margin-right: auto;
+      font-family: sans-serif;
+      font-size: 3em;
+      }
+      hr{
+        border: solid 2px;
+      }
+      #form{
+        border:solid 2px black;
+        border-radius: 4px;
+        padding: 6px;
+        margin-left:3em;
+        width: 200px;
+        margin-top: 0px;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #58c4e8
+      }
+      #floating-panel {
+        border-radius: 5PX;
+
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        padding: 5px;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+        background-color: white;
+      }
+      #floating-panel {
+        //border-radius: 5PX;
+        height: 105px;
+        left: 25%;
+        padding: 5px;
+
+        top: 10px;
+        z-index: 5;
+      }
+      button {
+       background-color: #58c4e8;
+       border: none;
+       color: white;
+       padding: 6px 18px;
+       text-align: center;
+       text-decoration: none;
+       display: inline-block;
+       font-size: 13px;
+       border-radius: 14px;
+     }
+     #pic{
+       height: 115px;
+         width: 300px;
+         margin-left:0px;
+         position: absolute;
+       }
+    </style>
+  </head>
+
+  <body>
+
+
+<img id="pic" src="mymap.JPEG" alt=""></img>
+    <div id="floating-panel">
+
+        <button onclick="toggleHeatmap()">Toggle Ice</button>
+        <button onclick="changeGradient()">Change Colour</button>
+        <button onclick="changeOpacity()">Change Opacity</button>
+          <b>Latitude:</b>
+          <input type="number" name="latitude" id="lat">
+          <b>Longitude:</b>
+          <input type="number" name="longitude" id="long">
+        <button onclick="enterPoint()">ENTER</button>
+          <p id = demo>Enter <b>Longitude</b> and <b>Latitude</b> to submit Icy sidewalk report</p>
+      </div>
+      <div id="map"></div>
+    <div id="bottom">
+      <hr>
+      Copyright © 2017 -BlackBerrians- All Rights Reserved.
+<br>
+    </div>
+    <script>
+
+
+
+      var map, heatmap;
+
+      var temp = [];
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 17,
+          center: {lat: 43.7735, lng: -79.5019},
+          mapTypeId: 'roadmap',
+          mapTypeControl: false
+        });
+
+        var opt = { minZoom: 17, maxZoom: 17 };
+        map.setOptions(opt);
+
+
+
+        var heatPoints = [
+          new google.maps.LatLng(43.773419, -79.502129),
+          new google.maps.LatLng(43.773374, -79.502106),
+          new google.maps.LatLng(43.773322, -79.502097),
+          new google.maps.LatLng(43.773302, -79.502095),
+          new google.maps.LatLng(43.773243, -79.502102),
+          new google.maps.LatLng(43.773188, -79.502122),
+
+          new google.maps.LatLng(43.773144, -79.502153),
+          new google.maps.LatLng(43.773122, -79.502200),
+          new google.maps.LatLng(43.773112, -79.502238),
+          new google.maps.LatLng(43.773093, -79.502314),
+          new google.maps.LatLng(43.773093, -79.502344),
+          new google.maps.LatLng(43.773085, -79.502466),
+          new google.maps.LatLng(43.773106, -79.502578),
+          new google.maps.LatLng(43.773175, -79.502668),
+          new google.maps.LatLng(43.773242, -79.502717),
+
+          new google.maps.LatLng(43.773106, -79.503355),
+          new google.maps.LatLng(43.773114, -79.503320),
+          new google.maps.LatLng(43.773125, -79.503269),
+          new google.maps.LatLng(43.773139, -79.503215),
+          new google.maps.LatLng(43.773153, -79.503167),
+
+          new google.maps.LatLng(43.773085, -79.502466),
+          new google.maps.LatLng(43.773106, -79.502578),
+          new google.maps.LatLng(43.773175, -79.502668),
+          new google.maps.LatLng(43.773242, -79.502717),
+        ];
+
+        //for (var i = 0; i < heatPoints.length; i++){
+        //    temp.push(new google.maps.LatLng(heatPoints[i]);
+        //};
+
+        temp = heatPoints;
+
+
+        heatmap = new google.maps.visualization.HeatmapLayer({
+          data: heatPoints,
+          map: map,
+          radius: 15
+        });
+      }
+
+
+      function toggleHeatmap() {
+        heatmap.setMap(heatmap.getMap() ? null : map);
+      }
+
+      function changeGradient() {
+        var gradient = [
+          'rgba(0, 255, 255, 0)',
+          'rgba(0, 255, 255, 1)',
+          'rgba(0, 191, 255, 1)',
+          'rgba(0, 127, 255, 1)',
+          'rgba(0, 63, 255, 1)',
+          'rgba(0, 0, 255, 1)',
+          'rgba(0, 0, 223, 1)',
+          'rgba(0, 0, 191, 1)',
+          'rgba(0, 0, 159, 1)',
+          'rgba(0, 0, 127, 1)',
+          'rgba(63, 0, 91, 1)',
+          'rgba(127, 0, 63, 1)',
+          'rgba(191, 0, 31, 1)',
+          'rgba(255, 0, 0, 1)'
+        ]
+        heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+      }
+
+      function changeRadius() {
+        heatmap.set('radius', heatmap.get('radius') ? null : 20);
+      }
+
+      function changeOpacity() {
+        heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+      }
+
+
+      // Heatmap data: 500 Points
+      function getPoints() {
+        var heatPoints = [
+          new google.maps.LatLng(43.773419, -79.502129),
+          new google.maps.LatLng(43.773374, -79.502106),
+          new google.maps.LatLng(43.773322, -79.502097),
+          //new google.maps.LatLng(43.773302, -79.502095),
+          new google.maps.LatLng(43.773243, -79.502102),
+          new google.maps.LatLng(43.773188, -79.502122),
+
+          new google.maps.LatLng(43.773144, -79.502153),
+          //new google.maps.LatLng(43.773122, -79.502200),
+          new google.maps.LatLng(43.773112, -79.502238),
+          //new google.maps.LatLng(43.773093, -79.502314),
+          new google.maps.LatLng(43.773093, -79.502344),
+          new google.maps.LatLng(43.773085, -79.502466),
+          new google.maps.LatLng(43.773106, -79.502578),
+          new google.maps.LatLng(43.773175, -79.502668),
+          new google.maps.LatLng(43.773242, -79.502717),
+        ];
+
+
+        return heatPoints;
+      }
+
+      //THIS ONE *************************
+      function enterPoint(){
+        var latitude = document.getElementById("lat").value;
+        var longitude = document.getElementById("long").value;
+
+        document.getElementById("demo").innerHTML = "Created warning at " + latitude + ", " + longitude;
+
+
+
+        //heatmap.set('gradient', tempGradient);
+
+        temp.push(new google.maps.LatLng(latitude, longitude));
+
+        var newdata = new google.maps.MVCArray(temp);
+        heatmap.set('data', newdata);
+
+        //heatPoints.push(new google.maps.LatLng(latitude, longitude));
+        //var latText = parseFloat(lat);
+        //var longText = parseFloat(long);
+        //heatPoints.concat(new google.maps.LatLng(lat, long));
+      }
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN8NGo5pt9aZ_AMoZtQJAaaPMecDuNHB0&libraries=visualization&callback=initMap">
+    </script>
+  </body>
+</html>
