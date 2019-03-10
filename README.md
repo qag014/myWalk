@@ -5,6 +5,8 @@ There have been times when walking on campus to classes, we came across a really
 It's a web based application, accessible via phone or laptop, shows a map of the campus, with sidewalks safe to walk on, and highlights the side walks icy/snowy to avoid.
 ## How we built it
 We started off by building an Android based application, but realized it will limit the user to only Android platform, and decided to approach a web based application, accessible by most type of mobile devices. We used Google maps api to get the map for the campus of York, used Javascript and HTML5 to create a heat map layer over the regular map to notify the commuter about affected sidewalk
+
+visit the following link to see a DEMO: https://mywalk.000webhostapp.com/myWalkMain.html
 ## Challenges we ran into
 Loading the heat map on top of the regular map
 ## Accomplishments that we're proud of
